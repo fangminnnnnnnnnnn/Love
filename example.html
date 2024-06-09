@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《獨立之心：感情中的自我探索》</title>
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    text-align: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; 
+    align-items: center;
+    height: 100vh;
+}
+
+#game-container {
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    border: 3px solid;
+    border-image: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00) 1;
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.7), 0 0 20px rgba(255, 255, 0, 0.7);
+    position: relative;
+    z-index: 1;
+    margin-bottom: 30px;
+    margin-top: auto; 
+}
+
+
+        .scene,
+        .ending {
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
+            background-size: 300% 300%;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.7), 0 0 10px rgba(0, 255, 255, 0.7), 0 0 10px rgba(255, 255, 0, 0.7);
+            animation: gradient 5s ease infinite;
+        }
+
+        button:hover {
+            background-position: right center;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        #backgroundWrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: url('intro_bg.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+        }
+
+        .typing-effect {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 2px solid;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes blink-caret {
+            from,
+            to {
+                border-color: transparent;
+            }
+
+            50% {
+                border-color: orange;
+            }
+        }
+
+        #input-container {
+            display: none;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #input-container input {
+  
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00) 1; 
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #00ffd5;
+            width: 25%;
+            box-sizing: border-box;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7), 0 0 20px rgba(0, 255, 255, 0.7), 0 0 20px rgba(255, 255, 0, 0.7);
+            outline: none;
+        }
+        #input-container input::placeholder {
+            color:#fff;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="backgroundWrapper"></div>
+    <div id="game-container">
+        <div id="intro" >
+            <h1>《獨立之心：感情中的自我探索》</h1>
+            <p>歡迎來到《獨立之心：感情中的自我探索》！在這個遊戲中，你將成為Jodie探索感情中的各種情況。</p>
+            <button onclick="startGame()">開始遊戲</button>
+        </div>
+
+        <div id="introduction" class="scene">
+            <h1>遊戲介紹</h1>
+            <p id="intro-text">Jodie最近與Ollie的感情關係陷入瓶頸，對於如何在關係中保持自我獨立感到困惑。Alva是你的摯友，你們無話不談，他也常給你有關感情的意見。現在按下CONTINUE為這段感情做出選擇吧！</p>
+            <button id="intro-continue" style="display:none;" onclick="showScene(1)">CONTINUE</button>
+        </div>
+
+        <div id="scene1" class="scene">
+            <h1>情景一：感情依賴</h1>
+            <p id="scene1-text" style="display: none;">Jodie與Ollie相處時，感覺到彼此之間的關係過於依賴，缺乏自由空間。</p>
+            <h2>你會選擇？</h2>
+            <p style="display: none;">1. 與Ollie直接溝通，表達自己對於關係過於依賴的擔憂。</p>
+            <p style="display: none;">2. 暫時忍耐，觀察關係的發展，等待更好的時機再進行溝通。</p>
+            <p style="display: none;">3. 向Alva尋求建議，詢問他對於如何處理這種情況的看法。</p>
+        </div>
+
+        <div id="scene2" class="scene">
+            <h1>情景二：向Alva尋求幫助</h1>
+            <p id="scene2-text" style="display: none;">你決定向你的摯友Alva尋求幫助，描述自己與Ollie之間的情況。</p>
+            <h2>你會選擇？</h2>
+            <p style="display: none;">1. 詳細描述與Ollie之間的情況，包括困惑和焦慮的感受。</p>
+            <p style="display: none;">2. 只提及部分情況，擔心被Alva誤解或無法理解。</p>
+            <p style="display: none;">3. 隱瞞真實情況，避免讓Alva擔心，只是求得一些簡單的建議。</p>
+        </div>
+
+        <div id="scene3" class="scene">
+            <h1>情景三：Alva的建議</h1>
+            <p id="scene3-text" style="display: none;">Alva聽完你的描述後，給予了一些建議。Alva鼓勵你要勇敢表達自己的需求和感受，同時也要尊重對方的感受。也提醒你在關係中保持自我獨立的重要性，並建議你試著找到自己的興趣和愛好，以充實自己的生活。</p>
+            <h2>你會選擇？</h2>
+            <p style="display: none;">1. 接受Alva的建議，勇敢表達自己的需求和感受，同時尊重對方的感受。</p>
+            <p style="display: none;">2. 聽取Alva的建議，但更加強調保持自己的獨立性，不願意對關係做出太多的妥協。</p>
+            <p style="display: none;">3. 聽從Alva的建議，但心存疑慮，並在行動上表現出被動接受的態度。</p>
+        </div>
+
+        <div id="scene4" class="scene">
+            <h1>情景四：深入溝通</h1>
+            <p id="scene4-text" style="display: none;">你決定按照Alva的建議，與Ollie進行一次深入的溝通，表達自己的需求和感受。</p>
+            <h2>你會選擇？</h2>
+            <p style="display: none;">1. 直接表達自己對於關係過於依賴的擔憂，希望Ollie能理解並給予空間。</p>
+            <p style="display: none;">2. 在溝通中更加強調保持自己的獨立性，希望Ollie能夠理解並支持。</p>
+            <p style="display: none;">3. 因為擔心溝通的結果，選擇逃避，問題沒有得到解決。</p>
+        </div>
+
+        <div id="ending1" class="ending">
+            <h1>結局一</h1>
+            <p>你們成功地進行了溝通，彼此更加理解和支持對方，關係變得更加穩固和健康。</p>
+            <button onclick="restartGame()">重新開始</button>
+        </div>
+
+        <div id="ending2" class="ending">
+            <h1>結局二</h1>
+            <p>你在溝通中更加強調保持自己的獨立性，Ollie感到有些被疏遠，但最終你們找到了一個平衡點。雖然關係中仍有挑戰，但你們都在努力適應。</p>
+            <button onclick="restartGame()">重新開始</button>
+        </div>
+
+        <div id="ending3" class="ending">
+            <h1>結局三</h1>
+            <p>你因為擔心溝通的結果而選擇了逃避，問題沒有得到解決，關係變得更加緊張和複雜，最終你們無法繼續在一起。</p>
+            <button onclick="restartGame()">重新開始</button>
+        </div>
+
+        <div id="input-container">
+            <input type="text" id="choice-input" placeholder="Enter your choice (1, 2, 3)">
+        </div>
+    </div>
+
+    <div id="input-container">
+        <input type="text" id="choice-input" placeholder="Enter your choice ">
+    </div>
+
+    <script>
+        let choices = [];
+        let currentScene = 0;
+
+        function updateSceneImage(scene) {
+            const backgroundWrapper = document.getElementById('backgroundWrapper');
+            switch (scene) {
+                case 0:
+                    backgroundWrapper.style.backgroundImage = "url('intro_bg.jpg')";
+                    break;
+                case 1:
+                    backgroundWrapper.style.backgroundImage = "url('introduction_bg.jpg')";
+                    break;
+                case 2:
+                    backgroundWrapper.style.backgroundImage = "url('scene1_bg.jpg')";
+                    break;
+                case 3:
+                    backgroundWrapper.style.backgroundImage = "url('scene2_bg.jpg')";
+                    break;
+                case 4:
+                    backgroundWrapper.style.backgroundImage = "url('scene3_bg.jpg')";
+                    break;
+                case 5:
+                    backgroundWrapper.style.backgroundImage = "url('scene4_bg.jpg')";
+                    break;
+                case 6:
+                    backgroundWrapper.style.backgroundImage = "url('ending1_bg.jpg')";
+                    break;
+                case 7:
+                    backgroundWrapper.style.backgroundImage = "url('ending2_bg.jpg')";
+                    break;
+                case 8:
+                    backgroundWrapper.style.backgroundImage = "url('ending3_bg.jpg')";
+                    break;
+            }
+        }
+
+        function typeEffect(element, callback) {
+            const text = element.innerHTML;
+            element.innerHTML = '';
+            let i = 0;
+
+            function typeNextChar() {
+                if (i < text.length) {
+                    element.append(text.charAt(i));
+                    i++;
+                    setTimeout(typeNextChar, 50);
+                } else {
+                    if (callback) callback();
+                }
+            }
+
+            typeNextChar();
+        }
+
+        function startGame() {
+            document.getElementById('intro').style.display = 'none';
+            document.getElementById('introduction').style.display = 'block';
+            updateSceneImage(1);
+            typeEffect(document.getElementById('intro-text'), () => {
+                document.getElementById('intro-continue').style.display = 'inline-block';
+            });
+        }
+
+        function showScene(sceneNumber) {
+            currentScene = sceneNumber;
+            const scenes = document.getElementsByClassName('scene');
+            for (let i = 0; i < scenes.length; i++) {
+                scenes[i].style.display = 'none';
+            }
+            const endings = document.getElementsByClassName('ending');
+            for (let i = 0; i < endings.length; i++) {
+                endings[i].style.display = 'none';
+            }
+            const currentSceneElement = document.getElementById(`scene${sceneNumber}`);
+            currentSceneElement.style.display = 'block';
+            updateSceneImage(sceneNumber + 1);
+
+            const texts = currentSceneElement.getElementsByTagName('p');
+            let index = 0;
+
+            function showNextText() {
+                if (index < texts.length) {
+                    texts[index].style.display = 'block';
+                    typeEffect(texts[index], showNextText);
+                    index++;
+                } else {
+                    document.getElementById('input-container').style.display = 'block';
+                }
+            }
+
+            showNextText();
+        }
+
+
+            
+        
+
+        function submitChoice(event) {
+            if (event.key === 'Enter') {
+                const choiceInput = document.getElementById('choice-input');
+                const choice = parseInt(choiceInput.value);
+                if (choice >= 1 && choice <= 3) {
+                    choices[currentScene - 1] = choice;
+                    document.getElementById('input-container').style.display = 'none';
+                    choiceInput.value = '';
+                    if (currentScene < 4) {
+                        showScene(currentScene + 1);
+                    } else {
+                        showEnding();
+                    }
+                } else {
+                    alert('Please enter your choice (1, 2, 3)');
+                }
+            }
+        }
+
+        function showEnding() {
+            const ending = determineEnding();
+            const scenes = document.getElementsByClassName('scene');
+            for (let i = 0; i < scenes.length; i++) {
+                scenes[i].style.display = 'none';
+            }
+            document.getElementById(`ending${ending}`).style.display = 'block';
+            updateSceneImage(ending + 5);
+        }
+
+        function determineEnding() {
+            if (choices[3] === 1) {
+                return 1; // 結局一
+            } else if (choices[3] === 2) {
+                return 2; // 結局二
+            } else {
+                return 3; // 結局三
+            }
+        }
+
+        function restartGame() {
+            choices = [];
+            currentScene = 0;
+            document.getElementById('intro').style.display = 'block';
+            document.getElementById("backgroundWrapper").style.backgroundImage = "url('intro_bg.jpg')";
+            const scenes = document.getElementsByClassName('scene');
+            const endings = document.getElementsByClassName('ending');
+            for (let i = 0; i < scenes.length; i++) {
+                scenes[i].style.display = 'none';
+            }
+            for (let i = 0; i < endings.length; i++) {
+                endings[i].style.display = 'none';
+            }
+            document.getElementById('backgroundWrapper').style.backgroundImage = '';
+            document.getElementById('input-container').style.display = 'none';
+        }
+
+        document.getElementById('choice-input').addEventListener('keydown', submitChoice);
+    </script>
+</body>
+
+</html>
